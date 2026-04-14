@@ -8,52 +8,56 @@
     <!-- Bibliothek für automatische PDF-Generierung -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        /* Optimierung für den PDF-Export und Druck */
         @media print {
             .no-print { display: none !important; }
-            body { background: white !important; color: black !important; padding: 0; }
-            .container { max-width: 100%; width: 100%; border: none; shadow: none; margin: 0; }
-            section { background: white !important; border: 1px solid #e2e8f0 !important; color: black !important; page-break-inside: avoid; }
-            input, td, th { color: black !important; }
-            .brand-gradient { background: #d97706 !important; color: white !important; }
-            label { color: #475569 !important; }
-            .dark-card { background-color: white !important; border: 1px solid #cbd5e1 !important; color: black !important; }
-            input { border-bottom: 1px solid #cbd5e1 !important; }
+            body { background: #0f172a !important; -webkit-print-color-adjust: exact; }
+            .container { max-width: 100%; width: 100%; border: none; shadow: none; margin: 0; padding: 10px; }
+            section { page-break-inside: avoid; break-inside: avoid; }
+            input, td, th { color: white !important; }
+            .dark-card { background-color: #1e293b !important; border: 1px solid #334155 !important; }
         }
+
         canvas {
             touch-action: none;
             cursor: crosshair;
             border: 1px dashed #f59e0b;
             background-color: #fefce8;
         }
+
         .image-preview img {
             max-height: 150px;
             object-fit: cover;
             border-radius: 0.5rem;
         }
+
         .brand-gradient {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
+
         .dark-card {
             background-color: #1e293b; /* Slate 800 */
             border: 1px solid #334155; /* Slate 700 */
         }
+
         input:focus {
             border-bottom-color: #f59e0b !important;
         }
-        /* Styling für den PDF-Export-Container */
-        #pdf-content {
-            padding: 20px;
-            background: #0f172a;
-        }
-        /* Fix für Number-Inputs in manchen Browsern */
+
+        /* Fix für Number-Inputs */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
             margin: 0; 
         }
+
+        /* Erzwungene Farben für den PDF-Renderer */
+        .pdf-fix {
+            color-scheme: dark;
+        }
     </style>
 </head>
-<body class="bg-[#0f172a] text-slate-200 font-sans p-4 md:p-8">
+<body class="bg-[#0f172a] text-slate-200 font-sans p-4 md:p-8 pdf-fix">
 
     <div id="capture-area" class="max-w-4xl mx-auto container">
         <!-- Header mit Logo und CI -->
@@ -61,7 +65,7 @@
             <div class="flex items-center gap-4">
                 <div class="w-24 h-24 bg-white p-2 rounded-lg shadow-xl flex items-center justify-center">
                     <!-- Firmenlogo -->
-                    <img src="AX_Logo_RGB_gold_black.png" alt="Automation Logo" onerror="this.src='https://via.placeholder.com/150?text=AX+LOGO'; this.className='opacity-40';" class="max-w-full max-h-full object-contain text-slate-900">
+                    <img src="AX_Logo_RGB_gold_black.png" alt="Automation Logo" onerror="this.src='https://via.placeholder.com/150?text=AX+LOGO'; this.className='opacity-40';" class="max-w-full max-h-full object-contain">
                 </div>
                 <div>
                     <h1 class="text-3xl font-black text-white tracking-tight uppercase">Einsatzbericht</h1>
@@ -99,7 +103,7 @@
                     </div>
                     <div class="relative">
                         <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Einsatzdatum</label>
-                        <input type="date" id="currentDate" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium color-scheme-dark" style="color-scheme: dark;">
+                        <input type="date" id="currentDate" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium" style="color-scheme: dark;">
                     </div>
                 </div>
             </section>
@@ -244,9 +248,10 @@
     </div>
 
     <!-- Overlay Ladebalken -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/90 z-[60] hidden flex-col items-center justify-center no-print">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mb-4"></div>
-        <p class="text-orange-500 font-bold uppercase tracking-widest">PDF wird erstellt...</p>
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/90 z-[60] hidden flex-col items-center justify-center no-print text-center px-4">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mb-6"></div>
+        <p class="text-orange-500 font-black uppercase tracking-widest text-xl mb-2">Technischer Export läuft</p>
+        <p class="text-slate-400 text-sm max-w-xs">Layout wird für das PDF-Format optimiert und skaliert...</p>
     </div>
 
     <script>
@@ -353,33 +358,39 @@
         setupSignature('sigTechnician');
         setupSignature('sigCustomer');
 
-        // PDF Generierung mit html2pdf
+        // PDF Generierung optimiert für CI-Treue
         async function createPDFBlob(isDownload = true) {
             const element = document.getElementById('capture-area');
             const reportNo = document.getElementById('reportNo').value || 'EB-UNBEKANNT';
             const customer = document.getElementById('customerName').value || 'Kunde';
             const filename = `Einsatzbericht_${reportNo}_${customer}.pdf`;
 
+            // Einstellungen für exaktes CI-Layout
             const opt = {
-                margin:       [10, 10, 10, 10],
+                margin:       [10, 5, 10, 5],
                 filename:     filename,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    backgroundColor: '#0f172a', // Hält den Dark-Mode Hintergrund im PDF
+                    logging: false,
+                    letterRendering: true
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            // Loader zeigen
             document.getElementById('loadingOverlay').classList.replace('hidden', 'flex');
 
             try {
                 if (isDownload) {
                     await html2pdf().set(opt).from(element).save();
                 } else {
-                    // Falls wir den Blob für später brauchen würden (hier aktuell nur Download)
-                    await html2pdf().set(opt).from(element).save();
+                    return await html2pdf().set(opt).from(element).output('blob');
                 }
             } catch (err) {
-                console.error("PDF Fehler:", err);
+                console.error("PDF Export Fehler:", err);
             } finally {
                 document.getElementById('loadingOverlay').classList.replace('flex', 'hidden');
             }
@@ -402,13 +413,13 @@
             const subject = encodeURIComponent(`Einsatzbericht ${reportNo} - ${customer}`);
             const body = encodeURIComponent(`Guten Tag,\n\nim Anhang erhalten Sie den Service-Einsatzbericht für den Einsatz bei ${customer}.\n\nMit freundlichen Grüßen\nIhre Technik-Abteilung`);
             
-            // 1. PDF generieren und herunterladen
+            // PDF generieren
             await createPDFBlob(true);
 
-            // 2. Mail Client öffnen
+            // Mail Client öffnen
             window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
             
-            // 3. Modal zur Bestätigung zeigen
+            // Modal zur Bestätigung zeigen
             setTimeout(() => {
                 const modal = document.getElementById('statusModal');
                 modal.classList.replace('hidden', 'flex');
