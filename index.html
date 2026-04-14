@@ -4,22 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service-Einsatzbericht | Automation</title>
+    <!-- Tailwind CSS (Optimierte CDN-Einbindung) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Bibliothek für automatische PDF-Generierung -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* Optimierung für den PDF-Export und Druck */
+        /* Optimierung für den Druck (Print-Layout) */
         @media print {
             .no-print { display: none !important; }
-            body { background: #0f172a !important; -webkit-print-color-adjust: exact; }
-            .container { max-width: 100%; width: 100%; border: none; shadow: none; margin: 0; padding: 10px; }
-            section { page-break-inside: avoid; break-inside: avoid; }
-            input, td, th { color: white !important; }
-            .dark-card { background-color: #1e293b !important; border: 1px solid #334155 !important; }
+            
+            body { 
+                background: white !important; 
+                color: black !important; 
+                padding: 0 !important;
+                margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .container { 
+                max-width: 100% !important; 
+                width: 100% !important; 
+                border: none !important; 
+                box-shadow: none !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+            }
+            
+            section, .dark-card { 
+                background: white !important; 
+                border: 1px solid #cbd5e1 !important; 
+                color: black !important; 
+                box-shadow: none !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                border-radius: 8px !important;
+                margin-bottom: 1.5rem !important;
+                display: block !important;
+            }
+
+            h1, h2, h3, p, label, input, td, th {
+                color: black !important;
+            }
+
+            header {
+                border-bottom: 3px solid #f59e0b !important;
+                margin-bottom: 2rem !important;
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+            }
+
+            input {
+                border-bottom: 1px solid #e2e8f0 !important;
+                background: transparent !important;
+                color: black !important;
+            }
+
+            .brand-gradient {
+                background: #f59e0b !important;
+                color: white !important;
+            }
+
+            svg {
+                color: #f59e0b !important;
+            }
+
+            tr {
+                background: transparent !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+            
+            th {
+                background-color: #f8fafc !important;
+                border-bottom: 2px solid #cbd5e1 !important;
+            }
+
+            canvas {
+                border: 1px solid #94a3b8 !important;
+                background: white !important;
+                max-width: 100%;
+            }
+
+            input::placeholder {
+                color: transparent !important;
+            }
         }
 
+        /* Bildschirm-Design (Industrial Dark) */
         canvas {
-            touch-action: none;
+            touch-action: none; /* Verhindert Scrollen beim Zeichnen */
             cursor: crosshair;
             border: 1px dashed #f59e0b;
             background-color: #fefce8;
@@ -36,36 +108,36 @@
         }
 
         .dark-card {
-            background-color: #1e293b; /* Slate 800 */
-            border: 1px solid #334155; /* Slate 700 */
+            background-color: #1e293b;
+            border: 1px solid #334155;
         }
 
         input:focus {
             border-bottom-color: #f59e0b !important;
         }
 
-        /* Fix für Number-Inputs */
+        /* Standard-Pfeile bei Zahlenfeldern ausblenden */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
             margin: 0; 
         }
 
-        /* Erzwungene Farben für den PDF-Renderer */
-        .pdf-fix {
-            color-scheme: dark;
+        /* Datepicker-Icon Invertierung für Dark Mode */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
         }
     </style>
 </head>
-<body class="bg-[#0f172a] text-slate-200 font-sans p-4 md:p-8 pdf-fix">
+<body class="bg-[#0f172a] text-slate-200 font-sans p-4 md:p-8">
 
     <div id="capture-area" class="max-w-4xl mx-auto container">
         <!-- Header mit Logo und CI -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b-2 border-orange-500 pb-6 gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-24 h-24 bg-white p-2 rounded-lg shadow-xl flex items-center justify-center">
-                    <!-- Firmenlogo -->
-                    <img src="AX_Logo_RGB_gold_black.png" alt="Automation Logo" onerror="this.src='https://via.placeholder.com/150?text=AX+LOGO'; this.className='opacity-40';" class="max-w-full max-h-full object-contain">
+                    <!-- Firmenlogo (Ladeschleife durch this.onerror=null gefixt) -->
+                    <img src="AX_Logo_RGB_gold_black.png" alt="Automation Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/ffffff/f59e0b?text=AX+LOGO'; this.className='opacity-40';" class="max-w-full max-h-full object-contain">
                 </div>
                 <div>
                     <h1 class="text-3xl font-black text-white tracking-tight uppercase">Einsatzbericht</h1>
@@ -75,7 +147,7 @@
             <div class="text-right flex flex-col items-end">
                 <div class="brand-gradient text-white px-4 py-1 rounded-full text-xs font-bold mb-3 no-print shadow-lg uppercase tracking-wider">Service Dokumentation</div>
                 <div class="flex flex-col">
-                    <label class="text-[10px] font-bold text-slate-500 uppercase text-right tracking-widest">Berichts-Nummer</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase text-right tracking-widest" for="reportNo">Berichts-Nummer</label>
                     <input type="text" id="reportNo" placeholder="EB-202X-001" class="text-right border-none bg-transparent font-mono font-bold text-orange-400 focus:ring-0 text-xl placeholder-slate-700">
                 </div>
             </div>
@@ -90,19 +162,15 @@
                 </h2>
                 <div class="space-y-5">
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Service-Techniker</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter" for="technicianName">Service-Techniker</label>
                         <input type="text" id="technicianName" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Kunde / Einsatzort</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter" for="customerName">Kunde / Einsatzort</label>
                         <input type="text" id="customerName" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Ziel-E-Mail (Empfänger)</label>
-                        <input type="email" id="targetEmail" placeholder="service@ihre-automation.de" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
-                    </div>
-                    <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Einsatzdatum</label>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter" for="currentDate">Einsatzdatum</label>
                         <input type="date" id="currentDate" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium" style="color-scheme: dark;">
                     </div>
                 </div>
@@ -143,7 +211,7 @@
                     <svg class="text-orange-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                     Tätigkeitsnachweise
                 </div>
-                <button onclick="addRow()" class="no-print brand-gradient hover:scale-105 active:scale-95 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg uppercase">
+                <button type="button" onclick="addRow()" class="no-print brand-gradient hover:scale-105 active:scale-95 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg uppercase">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     Paket hinzufügen
                 </button>
@@ -172,10 +240,10 @@
                                 <input type="number" step="0.25" class="w-full border-none focus:ring-1 focus:ring-orange-500/50 rounded px-2 py-1 text-sm text-right font-mono bg-slate-900/50 text-orange-400 placeholder-slate-700" placeholder="0.0">
                             </td>
                             <td class="py-4 px-2 text-center">
-                                <input type="checkbox" class="w-5 h-5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500">
+                                <input type="checkbox" class="w-5 h-5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500 cursor-pointer">
                             </td>
                             <td class="py-4 px-2 no-print text-right">
-                                <button onclick="removeRow(this)" class="text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1">
+                                <button type="button" onclick="removeRow(this)" class="text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                 </button>
                             </td>
@@ -209,80 +277,87 @@
             <div class="dark-card p-6 rounded-2xl shadow-lg border-t-4 border-orange-500">
                 <div class="flex justify-between items-center mb-4">
                     <label class="text-[10px] font-black text-orange-400 uppercase tracking-widest">Signatur Techniker</label>
-                    <button onclick="clearCanvas('sigTechnician')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
+                    <button type="button" onclick="clearCanvas('sigTechnician')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
                 </div>
                 <canvas id="sigTechnician" width="400" height="150" class="w-full h-32 rounded-xl shadow-inner border-none opacity-90 hover:opacity-100 transition-opacity"></canvas>
             </div>
             <div class="dark-card p-6 rounded-2xl shadow-lg border-t-4 border-white">
                 <div class="flex justify-between items-center mb-4">
                     <label class="text-[10px] font-black text-white uppercase tracking-widest">Kundenabnahme</label>
-                    <button onclick="clearCanvas('sigCustomer')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
+                    <button type="button" onclick="clearCanvas('sigCustomer')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
                 </div>
                 <canvas id="sigCustomer" width="400" height="150" class="w-full h-32 rounded-xl shadow-inner border-none opacity-90 hover:opacity-100 transition-opacity"></canvas>
             </div>
         </section>
 
         <!-- Aktionen -->
-        <footer class="flex flex-col sm:flex-row gap-6 justify-center no-print pb-20">
-            <button onclick="generatePDFOnly()" class="flex-1 brand-gradient hover:opacity-90 text-white font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                PDF herunterladen
-            </button>
-            <button onclick="sendMail()" id="sendMailBtn" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white border-2 border-slate-600 font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                Bericht versenden
+        <footer class="flex gap-6 justify-center no-print pb-20">
+            <button type="button" onclick="triggerPrint()" class="max-w-md w-full brand-gradient hover:opacity-90 text-white font-black py-5 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Als PDF exportieren / Drucken
             </button>
         </footer>
-    </div>
 
-    <!-- UI Modal -->
-    <div id="statusModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 no-print">
-        <div class="dark-card p-10 rounded-3xl shadow-2xl max-w-sm w-full text-center border-orange-500/50">
-            <div class="w-20 h-20 bg-orange-500/10 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-            <h3 class="font-black text-2xl mb-3 uppercase text-white tracking-tight">PDF wurde generiert</h3>
-            <p class="text-slate-400 text-sm mb-8 leading-relaxed">Die Datei befindet sich in Ihrem Download-Ordner. Bitte hängen Sie diese nun an die E-Mail an, die sich gerade geöffnet hat.</p>
-            <button onclick="document.getElementById('statusModal').classList.replace('flex','hidden')" class="w-full brand-gradient text-white py-4 rounded-xl font-black shadow-lg uppercase tracking-widest transform transition-transform hover:scale-[1.02]">Verstanden</button>
-        </div>
-    </div>
-
-    <!-- Overlay Ladebalken -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/90 z-[60] hidden flex-col items-center justify-center no-print text-center px-4">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mb-6"></div>
-        <p class="text-orange-500 font-black uppercase tracking-widest text-xl mb-2">Technischer Export läuft</p>
-        <p class="text-slate-400 text-sm max-w-xs">Layout wird für das PDF-Format optimiert und skaliert...</p>
     </div>
 
     <script>
-        // Init Date
-        document.getElementById('currentDate').valueAsDate = new Date();
+        // Init Date upon loading
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('currentDate');
+            if (dateInput) {
+                dateInput.valueAsDate = new Date();
+            }
+            
+            // Setup Canvas Signatures
+            setupSignature('sigTechnician');
+            setupSignature('sigCustomer');
+        });
 
-        // Work Packages Logic
+        // Optimierte Druckfunktion
+        function triggerPrint() {
+            try {
+                window.focus();
+                setTimeout(() => window.print(), 100);
+            } catch (e) {
+                console.error("Drucken blockiert:", e);
+                alert("Das Drucken wird in dieser Vorschau blockiert. Bitte drücke STRG + P oder öffne die Datei lokal auf deinem PC.");
+            }
+        }
+
+        // Arbeitspakete Logik (sichereres Klonen)
         function addRow() {
             const body = document.getElementById('workTableBody');
-            const newRow = body.children[0].cloneNode(true);
+            const firstRow = body.querySelector('tr');
+            
+            if (!firstRow) return;
+
+            const newRow = firstRow.cloneNode(true);
             newRow.querySelectorAll('input').forEach(input => {
-                if(input.type === 'checkbox') input.checked = false;
-                else input.value = '';
+                if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
             });
             body.appendChild(newRow);
         }
 
         function removeRow(btn) {
             const body = document.getElementById('workTableBody');
-            if (body.children.length > 1) {
+            if (body.querySelectorAll('tr').length > 1) {
                 btn.closest('tr').remove();
             }
         }
 
-        // Image Preview Logic
+        // Bildvorschau Logik
         function previewImages(event) {
             const gallery = document.getElementById('imageGallery');
             const placeholder = document.getElementById('imagePlaceholder');
             const files = event.target.files;
             
-            if (files.length > 0) placeholder.classList.add('hidden');
+            if (files && files.length > 0) {
+                placeholder.classList.add('hidden');
+            }
 
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
@@ -291,8 +366,8 @@
                     div.className = 'relative group image-preview';
                     div.innerHTML = `
                         <div class="relative overflow-hidden rounded-xl border-2 border-slate-700 shadow-xl">
-                            <img src="${e.target.result}" class="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-110">
-                            <button onclick="this.closest('.image-preview').remove(); checkImages();" class="no-print absolute top-2 right-2 bg-red-600/90 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
+                            <img src="${e.target.result}" alt="Beweisfoto" class="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-110">
+                            <button type="button" onclick="this.closest('.image-preview').remove(); checkImages();" class="no-print absolute top-2 right-2 bg-red-600/90 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                             </button>
                         </div>
@@ -302,17 +377,24 @@
                 }
                 reader.readAsDataURL(file);
             });
+            
+            // Input zurücksetzen, damit gleiche Datei erneut gewählt werden kann
+            event.target.value = '';
         }
 
         function checkImages() {
             const gallery = document.getElementById('imageGallery');
             const placeholder = document.getElementById('imagePlaceholder');
-            if (gallery.children.length === 0) placeholder.classList.remove('hidden');
+            if (gallery.children.length === 0) {
+                placeholder.classList.remove('hidden');
+            }
         }
 
-        // Signature Setup
+        // Optimiertes Setup für Canvas (verhindert Passive Listener Warnings & verbessert Performance)
         function setupSignature(id) {
             const canvas = document.getElementById(id);
+            if (!canvas) return;
+            
             const ctx = canvas.getContext('2d');
             let drawing = false;
 
@@ -328,13 +410,25 @@
 
             function draw(e) {
                 if (!drawing) return;
+                
                 ctx.lineWidth = 3;
                 ctx.lineCap = 'round';
                 ctx.strokeStyle = '#0f172a'; 
 
                 const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                
+                // Koordinaten je nach Eingabe (Touch vs Mouse) berechnen
+                let clientX, clientY;
+                if (e.touches && e.touches.length > 0) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
 
                 ctx.lineTo(x, y);
                 ctx.stroke();
@@ -342,88 +436,33 @@
                 ctx.moveTo(x, y);
             }
 
+            // Maus-Events
             canvas.addEventListener('mousedown', startPosition);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', finishedPosition);
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startPosition(e); });
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
+            canvas.addEventListener('mouseleave', finishedPosition);
+
+            // Touch-Events (mit passiven Optionen, um Scrolling abzufangen, aber keine Warnungen auszulösen)
+            canvas.addEventListener('touchstart', (e) => { 
+                e.preventDefault(); 
+                startPosition(e); 
+            }, { passive: false });
+            
+            canvas.addEventListener('touchmove', (e) => { 
+                e.preventDefault(); 
+                draw(e); 
+            }, { passive: false });
+            
             canvas.addEventListener('touchend', finishedPosition);
+            canvas.addEventListener('touchcancel', finishedPosition);
         }
 
+        // Hilfsfunktion zum Löschen des Canvas
         function clearCanvas(id) {
             const canvas = document.getElementById(id);
-            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        setupSignature('sigTechnician');
-        setupSignature('sigCustomer');
-
-        // PDF Generierung optimiert für CI-Treue
-        async function createPDFBlob(isDownload = true) {
-            const element = document.getElementById('capture-area');
-            const reportNo = document.getElementById('reportNo').value || 'EB-UNBEKANNT';
-            const customer = document.getElementById('customerName').value || 'Kunde';
-            const filename = `Einsatzbericht_${reportNo}_${customer}.pdf`;
-
-            // Einstellungen für exaktes CI-Layout
-            const opt = {
-                margin:       [10, 5, 10, 5],
-                filename:     filename,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    backgroundColor: '#0f172a', // Hält den Dark-Mode Hintergrund im PDF
-                    logging: false,
-                    letterRendering: true
-                },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            document.getElementById('loadingOverlay').classList.replace('hidden', 'flex');
-
-            try {
-                if (isDownload) {
-                    await html2pdf().set(opt).from(element).save();
-                } else {
-                    return await html2pdf().set(opt).from(element).output('blob');
-                }
-            } catch (err) {
-                console.error("PDF Export Fehler:", err);
-            } finally {
-                document.getElementById('loadingOverlay').classList.replace('flex', 'hidden');
+            if (canvas) {
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
             }
-        }
-
-        function generatePDFOnly() {
-            createPDFBlob(true);
-        }
-
-        // Automatisierte Mail-Funktion
-        async function sendMail() {
-            const customerInput = document.getElementById('customerName');
-            const reportNoInput = document.getElementById('reportNo');
-            const targetEmailInput = document.getElementById('targetEmail');
-            
-            const customer = customerInput ? customerInput.value : "Unbekannt";
-            const reportNo = reportNoInput ? reportNoInput.value : "EB-NEU";
-            const targetEmail = (targetEmailInput && targetEmailInput.value) ? targetEmailInput.value : "service@ihre-automation.de";
-            
-            const subject = encodeURIComponent(`Einsatzbericht ${reportNo} - ${customer}`);
-            const body = encodeURIComponent(`Guten Tag,\n\nim Anhang erhalten Sie den Service-Einsatzbericht für den Einsatz bei ${customer}.\n\nMit freundlichen Grüßen\nIhre Technik-Abteilung`);
-            
-            // PDF generieren
-            await createPDFBlob(true);
-
-            // Mail Client öffnen
-            window.location.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
-            
-            // Modal zur Bestätigung zeigen
-            setTimeout(() => {
-                const modal = document.getElementById('statusModal');
-                modal.classList.replace('hidden', 'flex');
-            }, 800);
         }
     </script>
 </body>
