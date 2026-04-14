@@ -8,15 +8,18 @@
     <style>
         @media print {
             .no-print { display: none !important; }
-            body { background: white; padding: 0; }
+            body { background: white !important; color: black !important; padding: 0; }
             .container { max-width: 100%; width: 100%; border: none; shadow: none; }
-            .card { border: 1px solid #e5e7eb; box-shadow: none !important; }
+            section { background: white !important; border: 1px solid #e2e8f0 !important; color: black !important; }
+            input, td, th { color: black !important; }
+            .brand-gradient { background: #d97706 !important; color: white !important; }
+            label { color: #475569 !important; }
         }
         canvas {
             touch-action: none;
             cursor: crosshair;
             border: 1px dashed #f59e0b;
-            background-color: #fffbeb;
+            background-color: #fefce8;
         }
         .image-preview img {
             max-height: 150px;
@@ -26,77 +29,84 @@
         .brand-gradient {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
+        .dark-card {
+            background-color: #1e293b; /* Slate 800 */
+            border: 1px solid #334155; /* Slate 700 */
+        }
+        input:focus {
+            border-bottom-color: #f59e0b !important;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans p-4 md:p-8">
+<body class="bg-[#0f172a] text-slate-200 font-sans p-4 md:p-8">
 
     <div class="max-w-4xl mx-auto container">
         <!-- Header mit Logo und CI -->
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b-2 border-orange-500 pb-6 gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-24 h-24 bg-white p-2 rounded-lg shadow-sm border border-orange-100 flex items-center justify-center">
+                <div class="w-24 h-24 bg-white p-2 rounded-lg shadow-xl flex items-center justify-center">
                     <!-- Firmenlogo -->
-                    <img src="AX_Logo_RGB_gold_white.png" alt="Automation Logo" onerror="this.src='https://via.placeholder.com/150?text=LOGO'; this.className='opacity-20';" class="max-w-full max-h-full object-contain">
+                    <img src="AX_Logo_RGB_gold_white.png" alt="Automation Logo" onerror="this.src='https://via.placeholder.com/150?text=AX+LOGO'; this.className='opacity-40';" class="max-w-full max-h-full object-contain text-slate-900">
                 </div>
                 <div>
-                    <h1 class="text-3xl font-black text-orange-600 tracking-tight">EINSATZBERICHT</h1>
-                    <p class="text-slate-500 uppercase tracking-widest text-xs font-bold">Automation & Sondermaschinenbau</p>
+                    <h1 class="text-3xl font-black text-white tracking-tight uppercase">Einsatzbericht</h1>
+                    <p class="text-orange-500 uppercase tracking-widest text-xs font-bold">Automation & Sondermaschinenbau</p>
                 </div>
             </div>
             <div class="text-right flex flex-col items-end">
-                <div class="brand-gradient text-white px-4 py-1 rounded-full text-xs font-bold mb-3 no-print shadow-md">SERVICE DOKUMENTATION</div>
+                <div class="brand-gradient text-white px-4 py-1 rounded-full text-xs font-bold mb-3 no-print shadow-lg">TECH-DOCUMENTATION</div>
                 <div class="flex flex-col">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase text-right">Berichts-Nr.</label>
-                    <input type="text" id="reportNo" placeholder="EB-202X-001" class="text-right border-none bg-transparent font-mono font-bold text-orange-700 focus:ring-0 text-lg">
+                    <label class="text-[10px] font-bold text-slate-500 uppercase text-right tracking-widest">Berichts-Nummer</label>
+                    <input type="text" id="reportNo" placeholder="EB-202X-001" class="text-right border-none bg-transparent font-mono font-bold text-orange-400 focus:ring-0 text-xl placeholder-slate-700">
                 </div>
             </div>
         </header>
 
         <!-- Stammdaten & Anlagendaten -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <section class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-orange-500">
-                <h2 class="text-sm font-black mb-4 flex items-center gap-2 text-orange-600 uppercase tracking-wider">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <section class="dark-card p-6 rounded-2xl shadow-lg border-l-4 border-orange-500">
+                <h2 class="text-sm font-black mb-6 flex items-center gap-2 text-white uppercase tracking-wider">
+                    <svg class="text-orange-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     Stammdaten
                 </h2>
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Service-Techniker</label>
-                        <input type="text" id="technicianName" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Service-Techniker</label>
+                        <input type="text" id="technicianName" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Kunde / Einsatzort</label>
-                        <input type="text" id="customerName" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Kunde / Einsatzort</label>
+                        <input type="text" id="customerName" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Einsatzdatum</label>
-                        <input type="date" id="currentDate" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Einsatzdatum</label>
+                        <input type="date" id="currentDate" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium color-scheme-dark" style="color-scheme: dark;">
                     </div>
                 </div>
             </section>
 
-            <section class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-slate-800">
-                <h2 class="text-sm font-black mb-4 flex items-center gap-2 text-slate-800 uppercase tracking-wider">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <section class="dark-card p-6 rounded-2xl shadow-lg border-l-4 border-slate-400">
+                <h2 class="text-sm font-black mb-6 flex items-center gap-2 text-white uppercase tracking-wider">
+                    <svg class="text-slate-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
                     Anlagendaten
                 </h2>
-                <div class="space-y-4">
+                <div class="space-y-5">
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Maschinentyp / Bezeichnung</label>
-                        <input type="text" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Maschinentyp / Bezeichnung</label>
+                        <input type="text" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="relative">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Seriennummer (SN)</label>
-                        <input type="text" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Seriennummer (SN)</label>
+                        <input type="text" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="relative">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase">Projekt-Nr.</label>
-                            <input type="text" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Projekt-Nr.</label>
+                            <input type="text" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                         </div>
                         <div class="relative">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase">Betriebsstunden</label>
-                            <input type="number" class="w-full border-b-2 border-slate-100 focus:border-orange-400 outline-none py-1 transition-colors font-medium">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Stunden (h)</label>
+                            <input type="number" class="w-full border-b border-slate-700 bg-transparent text-white focus:border-orange-500 outline-none py-1 transition-all font-medium">
                         </div>
                     </div>
                 </div>
@@ -104,37 +114,37 @@
         </div>
 
         <!-- Arbeitspakete -->
-        <section class="bg-white p-6 rounded-2xl shadow-sm border mb-8 overflow-hidden">
-            <h2 class="text-sm font-black mb-6 flex items-center justify-between text-orange-600 uppercase tracking-wider">
+        <section class="dark-card p-6 rounded-2xl shadow-lg mb-8 overflow-hidden">
+            <h2 class="text-sm font-black mb-6 flex items-center justify-between text-white uppercase tracking-wider">
                 <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                    Tätigkeitsnachweise (Arbeitspakete)
+                    <svg class="text-orange-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    Tätigkeitsnachweise
                 </div>
-                <button onclick="addRow()" class="no-print brand-gradient hover:opacity-90 text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm uppercase">
+                <button onclick="addRow()" class="no-print brand-gradient hover:scale-105 active:scale-95 text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg uppercase">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    Hinzufügen
+                    Paket hinzufügen
                 </button>
             </h2>
             
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="text-[10px] uppercase text-slate-400 border-b-2 border-slate-50">
-                            <th class="pb-3 px-1 w-1/4">Modul</th>
-                            <th class="pb-3 px-1 w-1/2">Beschreibung</th>
-                            <th class="pb-3 px-1 w-20 text-right">Dauer (h)</th>
-                            <th class="pb-3 px-1 w-16 text-center">Status</th>
-                            <th class="pb-3 px-1 w-10 no-print"></th>
+                        <tr class="text-[10px] uppercase text-slate-500 border-b border-slate-700">
+                            <th class="pb-3 px-2 w-1/4">Modul</th>
+                            <th class="pb-3 px-2 w-1/2">Beschreibung der Tätigkeit</th>
+                            <th class="pb-3 px-2 w-20 text-right">Dauer</th>
+                            <th class="pb-3 px-2 w-16 text-center">Status</th>
+                            <th class="pb-3 px-2 w-10 no-print"></th>
                         </tr>
                     </thead>
                     <tbody id="workTableBody">
-                        <tr class="border-b border-slate-50 last:border-0 group hover:bg-orange-50/30 transition-colors">
-                            <td class="py-4 px-1"><input type="text" class="w-full border-none focus:ring-1 focus:ring-orange-200 rounded px-2 py-1 text-sm bg-slate-50 font-bold text-orange-800" placeholder="z.B. Mechanik"></td>
-                            <td class="py-4 px-1"><input type="text" class="w-full border-none focus:ring-1 focus:ring-orange-200 rounded px-2 py-1 text-sm bg-transparent" placeholder="Tätigkeit beschreiben..."></td>
-                            <td class="py-4 px-1 text-right"><input type="number" step="0.25" class="w-full border-none focus:ring-1 focus:ring-orange-200 rounded px-2 py-1 text-sm text-right font-mono" placeholder="0.0"></td>
-                            <td class="py-4 px-1 text-center"><input type="checkbox" class="w-5 h-5 rounded border-slate-300 text-orange-500 focus:ring-orange-500"></td>
-                            <td class="py-4 px-1 no-print text-right">
-                                <button onclick="removeRow(this)" class="text-red-300 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity p-1">
+                        <tr class="border-b border-slate-700 last:border-0 group hover:bg-slate-700/30 transition-colors">
+                            <td class="py-4 px-2"><input type="text" class="w-full border-none focus:ring-1 focus:ring-orange-500/50 rounded px-2 py-1 text-sm bg-slate-900/50 font-bold text-orange-400" placeholder="z.B. Software"></td>
+                            <td class="py-4 px-2"><input type="text" class="w-full border-none focus:ring-1 focus:ring-orange-500/50 rounded px-2 py-1 text-sm bg-transparent text-slate-300" placeholder="Beschreibung..."></td>
+                            <td class="py-4 px-2 text-right"><input type="number" step="0.25" class="w-full border-none focus:ring-1 focus:ring-orange-500/50 rounded px-2 py-1 text-sm text-right font-mono text-white" placeholder="0.0"></td>
+                            <td class="py-4 px-2 text-center"><input type="checkbox" class="w-5 h-5 rounded border-slate-600 bg-slate-800 text-orange-500 focus:ring-orange-500"></td>
+                            <td class="py-4 px-2 no-print text-right">
+                                <button onclick="removeRow(this)" class="text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                                 </button>
                             </td>
@@ -145,64 +155,64 @@
         </section>
 
         <!-- Bilddokumentation -->
-        <section class="bg-white p-6 rounded-2xl shadow-sm border mb-8">
-            <h2 class="text-sm font-black mb-6 flex items-center justify-between text-orange-600 uppercase tracking-wider border-b border-orange-50 pb-4">
+        <section class="dark-card p-6 rounded-2xl shadow-lg mb-8">
+            <h2 class="text-sm font-black mb-6 flex items-center justify-between text-white uppercase tracking-wider border-b border-slate-700 pb-4">
                 <div class="flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    Fotodokumentation & Mängel
+                    <svg class="text-orange-500" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Bilder & Mängelanzeige
                 </div>
-                <label class="no-print bg-slate-800 hover:bg-slate-700 cursor-pointer text-white text-[10px] font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm uppercase">
+                <label class="no-print bg-slate-700 hover:bg-slate-600 cursor-pointer text-white text-[10px] font-black px-4 py-2 rounded-lg transition-all flex items-center gap-2 shadow-lg uppercase">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    Bilder hochladen
+                    Kamera / Upload
                     <input type="file" id="fileInput" multiple accept="image/*" class="hidden" onchange="previewImages(event)">
                 </label>
             </h2>
             <div id="imageGallery" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Images will appear here -->
+                <!-- Bilder werden hier eingefügt -->
             </div>
-            <p id="imagePlaceholder" class="text-slate-300 text-center py-10 italic text-sm border-2 border-dashed border-slate-100 rounded-xl">Keine Bilder für diesen Einsatz vorhanden</p>
+            <p id="imagePlaceholder" class="text-slate-600 text-center py-12 italic text-sm border-2 border-dashed border-slate-800 rounded-xl uppercase tracking-widest font-bold">Kein Bildmaterial vorhanden</p>
         </section>
 
         <!-- Unterschriften -->
         <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-orange-500">
+            <div class="dark-card p-6 rounded-2xl shadow-lg border-t-4 border-orange-500">
                 <div class="flex justify-between items-center mb-4">
-                    <label class="text-[10px] font-black text-orange-600 uppercase tracking-widest">Unterschrift Techniker</label>
-                    <button onclick="clearCanvas('sigTechnician')" class="no-print text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase">Löschen</button>
+                    <label class="text-[10px] font-black text-orange-400 uppercase tracking-widest">Signatur Techniker</label>
+                    <button onclick="clearCanvas('sigTechnician')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
                 </div>
-                <canvas id="sigTechnician" width="400" height="150" class="w-full h-32 rounded-xl border-2 border-orange-50 shadow-inner"></canvas>
+                <canvas id="sigTechnician" width="400" height="150" class="w-full h-32 rounded-xl shadow-inner border-none opacity-90 hover:opacity-100 transition-opacity"></canvas>
             </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-slate-800">
+            <div class="dark-card p-6 rounded-2xl shadow-lg border-t-4 border-white">
                 <div class="flex justify-between items-center mb-4">
-                    <label class="text-[10px] font-black text-slate-800 uppercase tracking-widest">Abnahme durch Kunden</label>
-                    <button onclick="clearCanvas('sigCustomer')" class="no-print text-[10px] font-bold text-slate-400 hover:text-red-500 uppercase">Löschen</button>
+                    <label class="text-[10px] font-black text-white uppercase tracking-widest">Kundenabnahme</label>
+                    <button onclick="clearCanvas('sigCustomer')" class="no-print text-[10px] font-bold text-slate-500 hover:text-red-500 uppercase tracking-tighter transition-colors">Zurücksetzen</button>
                 </div>
-                <canvas id="sigCustomer" width="400" height="150" class="w-full h-32 rounded-xl border-2 border-slate-50 shadow-inner"></canvas>
+                <canvas id="sigCustomer" width="400" height="150" class="w-full h-32 rounded-xl shadow-inner border-none opacity-90 hover:opacity-100 transition-opacity"></canvas>
             </div>
         </section>
 
         <!-- Aktionen -->
-        <footer class="flex flex-col sm:flex-row gap-6 justify-center no-print pb-10">
-            <button onclick="window.print()" class="flex-1 brand-gradient hover:opacity-90 text-white font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl transform hover:-translate-y-1 active:scale-95 uppercase tracking-wider">
+        <footer class="flex flex-col sm:flex-row gap-6 justify-center no-print pb-20">
+            <button onclick="window.print()" class="flex-1 brand-gradient hover:opacity-90 text-white font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-2xl transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Als PDF exportieren
+                PDF Dokument erzeugen
             </button>
-            <button onclick="sendMail()" class="flex-1 bg-white hover:bg-slate-50 text-slate-800 border-4 border-slate-800 font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg transform hover:-translate-y-1 active:scale-95 uppercase tracking-wider">
+            <button onclick="sendMail()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white border-2 border-slate-600 font-black py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-3 shadow-lg transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-                Per Mail senden
+                Bericht versenden
             </button>
         </footer>
     </div>
 
     <!-- UI Modal -->
-    <div id="statusModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50 no-print">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center">
-            <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div id="statusModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4 z-50 no-print">
+        <div class="dark-card p-10 rounded-3xl shadow-2xl max-w-sm w-full text-center border-orange-500/50">
+            <div class="w-20 h-20 bg-orange-500/10 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <h3 class="font-black text-xl mb-2 uppercase text-slate-800">Versand-Bereit</h3>
-            <p class="text-slate-500 text-sm mb-6 leading-relaxed">Speichern Sie den Bericht nun als PDF ab und hängen Sie diesen an die E-Mail an, die sich soeben geöffnet hat.</p>
-            <button onclick="document.getElementById('statusModal').classList.replace('flex','hidden')" class="w-full brand-gradient text-white py-3 rounded-xl font-black shadow-lg uppercase tracking-widest">Verstanden</button>
+            <h3 class="font-black text-2xl mb-3 uppercase text-white tracking-tight">PDF Export bereit</h3>
+            <p class="text-slate-400 text-sm mb-8 leading-relaxed">Der Bericht wurde für den Mail-Versand vorbereitet. Bitte speichern Sie nun das PDF und fügen Sie es der Nachricht hinzu.</p>
+            <button onclick="document.getElementById('statusModal').classList.replace('flex','hidden')" class="w-full brand-gradient text-white py-4 rounded-xl font-black shadow-lg uppercase tracking-widest transform transition-transform hover:scale-[1.02]">Verstanden</button>
         </div>
     </div>
 
@@ -242,13 +252,13 @@
                     const div = document.createElement('div');
                     div.className = 'relative group image-preview';
                     div.innerHTML = `
-                        <div class="relative overflow-hidden rounded-xl border-4 border-white shadow-md">
-                            <img src="${e.target.result}" class="w-full aspect-square object-cover transition-transform duration-500 group-hover:scale-110">
-                            <button onclick="this.closest('.image-preview').remove(); checkImages();" class="no-print absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="relative overflow-hidden rounded-xl border-2 border-slate-700 shadow-xl">
+                            <img src="${e.target.result}" class="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-110">
+                            <button onclick="this.closest('.image-preview').remove(); checkImages();" class="no-print absolute top-2 right-2 bg-red-600/90 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                             </button>
                         </div>
-                        <input type="text" placeholder="Beschreibung..." class="w-full mt-2 text-[10px] text-center border-none bg-slate-100 rounded p-1 focus:ring-1 focus:ring-orange-200">
+                        <input type="text" placeholder="Bildnotiz..." class="w-full mt-3 text-[10px] text-center border-none bg-slate-900 rounded-lg p-2 text-slate-400 focus:ring-1 focus:ring-orange-500/50">
                     `;
                     gallery.appendChild(div);
                 }
@@ -282,7 +292,7 @@
                 if (!drawing) return;
                 ctx.lineWidth = 3;
                 ctx.lineCap = 'round';
-                ctx.strokeStyle = '#1e293b'; // Dark Navy/Slate for signature
+                ctx.strokeStyle = '#0f172a'; // Deep Slate for signature legibility
 
                 const rect = canvas.getBoundingClientRect();
                 const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
